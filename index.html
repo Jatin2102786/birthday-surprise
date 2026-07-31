@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Birthday Countdown & Secret Surprise 🎁</title>
+  <meta name="description" content="A magical birthday countdown website with a time-locked surprise link that unlocks on August 16 at 12:00 AM." />
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Outfit:wght@300;400;600;700;800&family=Playfair+Display:ital,wght@0,600;0,800;1,600&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  
+  <!-- Canvas Confetti CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- Background Canvas for Stars & Balloons -->
+  <canvas id="bg-canvas"></canvas>
+
+  <div class="app-wrapper">
+    <!-- Navbar / Header -->
+    <header class="navbar">
+      <div class="brand">
+        <span class="brand-icon">✨</span>
+        <span class="brand-title">Birthday Vault</span>
+      </div>
+      <div class="nav-controls">
+        <button id="sound-btn" class="icon-btn" title="Toggle Sound">
+          <i class="fa-solid fa-volume-xmark" id="sound-icon"></i>
+        </button>
+        <button id="preview-toggle-btn" class="badge-btn" title="Quick Preview Unlocked State">
+          <i class="fa-solid fa-wand-magic-sparkles"></i> Test Mode
+        </button>
+        <button id="settings-btn" class="icon-btn" title="Customize Website">
+          <i class="fa-solid fa-gear"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="main-content">
+      
+      <!-- Header Badge & Greeting -->
+      <section class="hero-section">
+        <div class="status-pill" id="status-pill">
+          <span class="pill-dot"></span>
+          <span id="pill-text">TIME-LOCKED SURPRISE</span>
+        </div>
+
+        <h1 class="main-title">
+          Counting Down For <br />
+          <span class="highlight-name" id="display-name">Special Someone</span> 🎈
+        </h1>
+        <p class="subtitle" id="display-subtitle">
+          A secret surprise has been locked inside this magic vault. It will unlock precisely on <strong class="unlock-date-text">August 16th at 12:00 AM (Midnight)</strong>.
+        </p>
+      </section>
+
+      <!-- Countdown Timer Component -->
+      <section class="countdown-section">
+        <div class="timer-grid">
+          <div class="timer-card">
+            <span class="timer-val" id="days">00</span>
+            <span class="timer-label">DAYS</span>
+          </div>
+          <div class="timer-colon">:</div>
+          <div class="timer-card">
+            <span class="timer-val" id="hours">00</span>
+            <span class="timer-label">HOURS</span>
+          </div>
+          <div class="timer-colon">:</div>
+          <div class="timer-card">
+            <span class="timer-val" id="minutes">00</span>
+            <span class="timer-label">MINUTES</span>
+          </div>
+          <div class="timer-colon">:</div>
+          <div class="timer-card highlight-sec">
+            <span class="timer-val" id="seconds">00</span>
+            <span class="timer-label">SECONDS</span>
+          </div>
+        </div>
+
+        <!-- Lock Progress Bar -->
+        <div class="lock-progress-container">
+          <div class="progress-info">
+            <span id="lock-status-label"><i class="fa-solid fa-lock"></i> Vault Locked</span>
+            <span id="lock-percentage">0%</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="progress-fill"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Main Locked / Unlocked Link Action Container -->
+      <section class="action-section">
+        
+        <!-- Locked View (Active before Aug 16 12:00 AM) -->
+        <div id="locked-card" class="surprise-card locked-state">
+          <div class="card-glow"></div>
+          <div class="lock-icon-wrapper">
+            <div class="lock-pulse-ring"></div>
+            <i class="fa-solid fa-lock-keyhole lock-main-icon"></i>
+          </div>
+          
+          <h2 class="card-title">Secret Link Locked</h2>
+          <p class="card-desc">
+            This special link is protected by time. Return at midnight on August 16 to claim your birthday surprise!
+          </p>
+
+          <button id="locked-link-btn" class="btn btn-locked">
+            <i class="fa-solid fa-shield-halved"></i>
+            <span>Clickable on 16 Aug @ 12:00 AM</span>
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
+          
+          <p class="hint-text">
+            <i class="fa-solid fa-circle-info"></i> Clicking before the date will display the remaining time.
+          </p>
+        </div>
+
+        <!-- Unlocked View (Active on/after Aug 16 12:00 AM or in test mode) -->
+        <div id="unlocked-card" class="surprise-card unlocked-state hidden">
+          <div class="card-glow-gold"></div>
+          <div class="unlock-icon-wrapper">
+            <i class="fa-solid fa-gift gift-bounce-icon"></i>
+          </div>
+
+          <h2 class="card-title-gold">🎉 THE VAULT IS UNLOCKED! 🎉</h2>
+          <p class="card-desc">
+            Happy Birthday! Your magical link is officially ready. Click below to reveal your surprise!
+          </p>
+
+          <!-- The main clickable birthday link -->
+          <a id="surprise-link" href="https://google.com" target="_blank" rel="noopener noreferrer" class="btn btn-unlocked glow-btn">
+            <i class="fa-solid fa-gift"></i>
+            <span id="link-btn-text">🎁 CLICK HERE FOR YOUR BIRTHDAY SURPRISE! 🎁</span>
+            <i class="fa-solid fa-up-right-from-square"></i>
+          </a>
+
+          <p class="custom-message-box" id="display-custom-message">
+            "Wishing you a year filled with happiness, laughter, and magical moments!"
+          </p>
+        </div>
+
+      </section>
+
+      <!-- Interactive Birthday Cake & Wishes -->
+      <section class="cake-section">
+        <h3 class="section-heading">Make a Wish & Blow the Candles! 🕯️</h3>
+        <p class="section-sub">Click on each candle flame to blow it out!</p>
+
+        <div class="cake-container">
+          <div class="candles-row">
+            <div class="candle" data-candle="1">
+              <div class="flame" id="flame-1"></div>
+              <div class="wick"></div>
+              <div class="candle-stick"></div>
+            </div>
+            <div class="candle" data-candle="2">
+              <div class="flame" id="flame-2"></div>
+              <div class="wick"></div>
+              <div class="candle-stick"></div>
+            </div>
+            <div class="candle" data-candle="3">
+              <div class="flame" id="flame-3"></div>
+              <div class="wick"></div>
+              <div class="candle-stick"></div>
+            </div>
+          </div>
+          <div class="cake-top">
+            <div class="icing"></div>
+          </div>
+          <div class="cake-middle">
+            <div class="decorations"></div>
+          </div>
+          <div class="cake-bottom"></div>
+          <div class="cake-plate"></div>
+        </div>
+
+        <button id="relight-btn" class="btn-subtle hidden">
+          <i class="fa-solid fa-fire-flame-curved"></i> Relight Candles
+        </button>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>Made with ❤️ for a unforgettable birthday surprise</p>
+      <p class="footer-note">Unlocks automatically on August 16 @ 12:00 AM</p>
+    </footer>
+  </div>
+
+  <!-- Settings Modal -->
+  <div id="settings-modal" class="modal-backdrop hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-sliders"></i> Customize Birthday Site</h3>
+        <button id="close-modal-btn" class="close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        
+        <div class="form-group">
+          <label for="input-name">Recipient Name:</label>
+          <input type="text" id="input-name" placeholder="e.g. Alex / Bestie" />
+        </div>
+
+        <div class="form-group">
+          <label for="input-url">Destination Link (Secret Birthday Surprise URL):</label>
+          <input type="url" id="input-url" placeholder="https://example.com/birthday-surprise" />
+          <small>This is the link that becomes clickable on Aug 16 @ 12:00 AM.</small>
+        </div>
+
+        <div class="form-group">
+          <label for="input-date">Unlock Target Date & Time:</label>
+          <input type="datetime-local" id="input-date" />
+          <small>Default: August 16 at 00:00:00 (Midnight).</small>
+        </div>
+
+        <div class="form-group">
+          <label for="input-message">Custom Birthday Message:</label>
+          <textarea id="input-message" rows="3" placeholder="Enter your heartfelt message here..."></textarea>
+        </div>
+
+        <div class="form-group toggle-group">
+          <label for="input-test-mode" class="toggle-label">
+            <span>Force Test Mode (Unlock Immediately):</span>
+            <input type="checkbox" id="input-test-mode" />
+          </label>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button id="reset-settings-btn" class="btn-secondary">Reset Defaults</button>
+        <button id="save-settings-btn" class="btn-primary">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container"></div>
+
+  <!-- Script -->
+  <script src="script.js"></script>
+</body>
+</html>
