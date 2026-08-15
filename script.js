@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
     surpriseUrl: TARGET_URL,
     customMessage: DEFAULT_MESSAGE,
     unlockDateISO: getDefaultTargetDate().toISOString(),
-    testMode: true
+    testMode: false
   };
 
   // Load saved settings
@@ -48,7 +48,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const parsed = JSON.parse(savedSettings);
       settings = { ...settings, ...parsed };
       settings.surpriseUrl = TARGET_URL; // Force target URL
-      settings.testMode = true; // Ensure vault is unlocked by default
     } catch (e) {
       console.warn("Could not parse saved settings:", e);
     }
