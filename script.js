@@ -339,7 +339,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   elSaveSettingsBtn.addEventListener('click', () => {
     settings.recipientName = inputName.value.trim() || DEFAULT_NAME;
-    settings.surpriseUrl = inputUrl.value.trim() || DEFAULT_SURPRISE_URL;
+    settings.surpriseUrl = inputUrl.value.trim() || TARGET_URL;
     settings.customMessage = inputMessage.value.trim() || DEFAULT_MESSAGE;
     settings.testMode = inputTestMode.checked;
 
