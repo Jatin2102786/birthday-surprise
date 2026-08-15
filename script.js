@@ -5,8 +5,8 @@
 document.addEventListener('DOMContentLoaded', () => {
 
   // --- Default Configuration ---
-  const DEFAULT_NAME = "Special Someone";
-  const DEFAULT_SURPRISE_URL = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"; // Default place holder (Rickroll or custom video/photo link)
+  const DEFAULT_NAME = "Chiku";
+  const DEFAULT_SURPRISE_URL = "https://jatin2102786.github.io/chikuuuuu-birthday/";
   const DEFAULT_MESSAGE = "Wishing you a happy birthday filled with love, magic, and unforgettable memories!";
   
   // Calculate target date: August 16 at 00:00:00 (12:00 AM Midnight)
@@ -38,6 +38,10 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       const parsed = JSON.parse(savedSettings);
       settings = { ...settings, ...parsed };
+      // Always update surpriseUrl to the new target link if old default was set
+      if (!settings.surpriseUrl || settings.surpriseUrl.includes('youtube.com') || settings.surpriseUrl.includes('google.com')) {
+        settings.surpriseUrl = DEFAULT_SURPRISE_URL;
+      }
     } catch (e) {
       console.warn("Could not parse saved settings:", e);
     }
