@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
     surpriseUrl: DEFAULT_SURPRISE_URL,
     customMessage: DEFAULT_MESSAGE,
     unlockDateISO: getDefaultTargetDate().toISOString(),
-    testMode: false
+    testMode: true
   };
 
   // Load saved settings
@@ -38,10 +38,9 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       const parsed = JSON.parse(savedSettings);
       settings = { ...settings, ...parsed };
-      // Always update surpriseUrl to the new target link if old default was set
-      if (!settings.surpriseUrl || settings.surpriseUrl.includes('youtube.com') || settings.surpriseUrl.includes('google.com')) {
-        settings.surpriseUrl = DEFAULT_SURPRISE_URL;
-      }
+      // Always update surpriseUrl to the target link
+      settings.surpriseUrl = DEFAULT_SURPRISE_URL;
+      settings.testMode = true; // Ensure vault is unlocked by default
     } catch (e) {
       console.warn("Could not parse saved settings:", e);
     }
