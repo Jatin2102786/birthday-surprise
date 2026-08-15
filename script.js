@@ -6,9 +6,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- Default Configuration ---
   const DEFAULT_NAME = "Chiku";
-  const DEFAULT_SURPRISE_URL = "https://jatin2102786.github.io/chikuuuuu-birthday/";
+  const TARGET_URL = "https://jatin2102786.github.io/chikuuuuu-birthday/";
+  const DEFAULT_SURPRISE_URL = TARGET_URL;
   const DEFAULT_MESSAGE = "Wishing you a happy birthday filled with love, magic, and unforgettable memories!";
   
+  // Clear any old cached settings with YouTube URL
+  try {
+    const raw = localStorage.getItem('birthday_vault_settings');
+    if (raw && (raw.includes('youtube') || raw.includes('google'))) {
+      localStorage.removeItem('birthday_vault_settings');
+    }
+  } catch(e) {}
+
   // Calculate target date: August 16 at 00:00:00 (12:00 AM Midnight)
   function getDefaultTargetDate() {
     const now = new Date();
@@ -26,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- State & LocalStorage Management ---
   let settings = {
     recipientName: DEFAULT_NAME,
-    surpriseUrl: DEFAULT_SURPRISE_URL,
+    surpriseUrl: TARGET_URL,
     customMessage: DEFAULT_MESSAGE,
     unlockDateISO: getDefaultTargetDate().toISOString(),
     testMode: true
@@ -38,8 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       const parsed = JSON.parse(savedSettings);
       settings = { ...settings, ...parsed };
-      // Always update surpriseUrl to the target link
-      settings.surpriseUrl = DEFAULT_SURPRISE_URL;
+      settings.surpriseUrl = TARGET_URL; // Force target URL
       settings.testMode = true; // Ensure vault is unlocked by default
     } catch (e) {
       console.warn("Could not parse saved settings:", e);
@@ -133,7 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
     elDisplayCustomMessage.textContent = `"${settings.customMessage || DEFAULT_MESSAGE}"`;
     
     if (elSurpriseLink) {
-      elSurpriseLink.href = settings.surpriseUrl || DEFAULT_SURPRISE_URL;
+      elSurpriseLink.href = TARGET_URL;
     }
 
     const unlockDateObj = new Date(settings.unlockDateISO);
