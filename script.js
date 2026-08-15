@@ -257,20 +257,24 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- Locked Button Click Handler ---
   elLockedLinkBtn.addEventListener('click', (e) => {
     e.preventDefault();
+
+    const now = new Date().getTime();
+    const target = new Date(settings.unlockDateISO).getTime();
+    const diff = target - now;
+
+    if (settings.testMode || diff <= 0) {
+      window.open(settings.surpriseUrl || DEFAULT_SURPRISE_URL, '_blank');
+      return;
+    }
+
     playTone(300, 'sawtooth', 0.2);
 
     elLockedCard.classList.remove('wobble');
     void elLockedCard.offsetWidth; // Trigger reflow
     elLockedCard.classList.add('wobble');
 
-    const now = new Date().getTime();
-    const target = new Date(settings.unlockDateISO).getTime();
-    const diff = target - now;
-
-    if (diff > 0) {
-      const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
-      showToast(`🔒 Magic link is locked! Come back in ${days} day(s) on August 16 at 12:00 AM 🎂`);
-    }
+    const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+    showToast(`🔒 Magic link is locked! Come back in ${days} day(s) on August 16 at 12:00 AM 🎂`);
   });
 
   // --- Preview / Test Mode Toggle Button ---
@@ -282,7 +286,8 @@ document.addEventListener('DOMContentLoaded', () => {
     playTone(600, 'sine', 0.15);
 
     if (settings.testMode) {
-      showToast("✨ Test Mode ON: Link is now unlocked for testing!", 3500);
+      const url = settings.surpriseUrl || DEFAULT_SURPRISE_URL;
+      showToast(`✨ Test Mode ON: Surprise Unlocked! <a href="${url}" target="_blank" style="color:#ffd700; font-weight:bold; text-decoration:underline; margin-left:6px;">Click to Open Link 🎁</a>`, 8000);
     } else {
       showToast("🔒 Test Mode OFF: Link is locked until target date.", 3500);
     }
